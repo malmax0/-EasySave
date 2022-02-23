@@ -1,0 +1,96 @@
+﻿<Window x:Class="EasySaveRemote.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EasySaveRemote"
+        mc:Ignorable="d" xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
+        Height="648.5" Width="1155.5" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" Icon="/images/save_icon.png" ShowInTaskbar="False" Title="EasySave" Background="#FF202228" WindowStyle="ThreeDBorderWindow">
+	<Grid Margin="0,0,3.6,0.2" UseLayoutRounding="True">
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="22*"/>
+			<ColumnDefinition Width="918*"/>
+			<ColumnDefinition Width="0*"/>
+			<ColumnDefinition Width="38*"/>
+			<ColumnDefinition Width="61*"/>
+			<ColumnDefinition Width="106*"/>
+			<ColumnDefinition Width="0*"/>
+		</Grid.ColumnDefinitions>
+		<Grid x:Name="HOME" Grid.ColumnSpan="5" Grid.Column="1" Margin="9.4,16,7.6,34.2">
+			<Label x:Name="LabelTask" Content="Backup Tasks" HorizontalAlignment="Left" Height="47" VerticalAlignment="Top" Width="584" FontFamily="Open Sans Semibold" FontSize="24" Foreground="White"/>
+			<Border x:Name="Border_Options" BorderThickness="1" HorizontalAlignment="Left" Height="40" Margin="0,59,0,0" VerticalAlignment="Top" Width="133" Background="#FF2A2E36" CornerRadius="15">
+				<Grid Margin="0,0,33.6,3.4">
+					<Button x:Name="DeleteButton" HorizontalAlignment="Left" Height="30" Margin="-49,0,0,0" VerticalAlignment="Top" Width="40" BorderBrush="{x:Null}" RenderTransformOrigin="-1.806,0.752" Click="DeleteBackup_Click" Style="{StaticResource MyButton}">
+						<Button.RenderTransform>
+							<TransformGroup>
+								<ScaleTransform/>
+								<SkewTransform/>
+								<RotateTransform/>
+								<TranslateTransform Y="4" X="60"/>
+							</TransformGroup>
+						</Button.RenderTransform>
+						<Button.Background>
+							<ImageBrush ImageSource="/images/deleteIcon.png"/>
+						</Button.Background>
+					</Button>
+					<Button x:Name="LaunchButton" HorizontalAlignment="Left" Margin="78,5,-20.4,0" Width="40" Foreground="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="-4.83,0.469" Click="LaunchBackup_Click" Style="{StaticResource MyButton}">
+						<Button.Background>
+							<ImageBrush ImageSource="/images/playIcon.jpg"/>
+						</Button.Background>
+					</Button>
+					<Button x:Name="PauseButton" HorizontalAlignment="Left" Visibility="Hidden" Margin="78,5,-22,0" VerticalAlignment="Top" Height="30" Width="40" Foreground="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="-4.83,0.469" Click="Pause_Click" Style="{StaticResource MyButton}">
+						<Button.Background>
+							<ImageBrush ImageSource="/images/PauseIcon.png"/>
+						</Button.Background>
+					</Button>
+					<Button x:Name="StopButton" Visibility="Hidden" HorizontalAlignment="Left" Margin="143,5,-78.4,0" VerticalAlignment="Top" Height="30" Width="33" Foreground="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="-4.83,0.469" Click="Stop_Click" Style="{StaticResource MyButton}">
+						<Button.Background>
+							<ImageBrush ImageSource="/images/StopIcon.png"/>
+						</Button.Background>
+					</Button>
+					<Button x:Name="ResumeButton" Visibility="Hidden" HorizontalAlignment="Left" Margin="78,5,-20.4,0" VerticalAlignment="Top" Height="30" Width="40" Foreground="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="-4.83,0.469" Click="Resume_Click" Style="{StaticResource MyButton}">
+						<Button.Background>
+							<ImageBrush ImageSource="/images/playicon.jpg"/>
+						</Button.Background>
+					</Button>
+				</Grid>
+			</Border>
+			<Border x:Name="Border_GRRID" BorderThickness="1" HorizontalAlignment="Left" Margin="0,114,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.266,1.668" Height="352" Width="1067" CornerRadius="15" BorderBrush="#FF2A2E36">
+				<syncfusion:SfDataGrid x:Name="GRRID" GridLinesVisibility="Horizontal" HeaderStyle="{StaticResource MyGrid}" HeaderLinesVisibility="Horizontal" HorizontalAlignment="Center" Height="327" Margin="20.2,14.2,7.4,0" VerticalAlignment="Top" Width="1038" ColumnSizer="AutoLastColumnFill" BorderBrush="{x:Null}" UseLayoutRounding="True" SelectionMode="Multiple" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CurrentCellBorderBrush="{x:Null}" RowHoverHighlightingBrush="#FF4489DF" RowSelectionBrush="#FF69A9C2" CurrentCellBorderThickness="0,2" BorderThickness="0,1" NavigationMode="Row" Foreground="White" HeaderRowHeight="28">
+				</syncfusion:SfDataGrid>
+			</Border>
+            <Border x:Name="SearchBar" BorderThickness="1" HorizontalAlignment="Left" Height="40" Margin="265,59,0,0" VerticalAlignment="Top" Width="413" Background="#FF2A2E36" CornerRadius="15">
+				<TextBox x:Name="SearchText" HorizontalAlignment="Left" Height="29" Margin="9.2,5.2,0,0" TextWrapping="Wrap" Text="Search by name ..." VerticalAlignment="Top" Width="344" Background="{x:Null}" FontSize="18" BorderBrush="{x:Null}" MouseDoubleClick="SearchText_Click" SelectionBrush="{x:Null}" Foreground="White"/>
+			</Border>
+			<Border x:Name="Border_refresh" BorderThickness="1" HorizontalAlignment="Left" Height="40" Margin="994,59,0,0" VerticalAlignment="Top" Width="73" Background="#FF2A2E36" CornerRadius="15">
+				<Button x:Name="RefreshButton" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="30" BorderBrush="{x:Null}" RenderTransformOrigin="-1.806,0.752" Style="{StaticResource MyButton}" Margin="21.2,-0.8,0,0" Click="RefreshButton_Click">
+					<Button.RenderTransform>
+						<TransformGroup>
+							<ScaleTransform/>
+							<SkewTransform/>
+							<RotateTransform/>
+							<TranslateTransform Y="4"/>
+						</TransformGroup>
+					</Button.RenderTransform>
+					<Button.Background>
+						<ImageBrush ImageSource="/images/RefreshIcon.png"/>
+					</Button.Background>
+				</Button>
+			</Border>
+			<ProgressBar x:Name="ProgressBar" HorizontalAlignment="Left" Height="19" Margin="265,494,0,0" VerticalAlignment="Top" Width="509" BorderBrush="#FF69A9C2" Background="#FF202228"/>
+			<Button x:Name="SearchButton" HorizontalAlignment="Left" Height="30" Margin="620,59,0,0" VerticalAlignment="Top" Width="40" BorderBrush="{x:Null}" RenderTransformOrigin="-1.806,0.752" Style="{StaticResource MyButton}" Click="SearchButton_Click">
+				<Button.RenderTransform>
+					<TransformGroup>
+						<ScaleTransform/>
+						<SkewTransform/>
+						<RotateTransform/>
+						<TranslateTransform Y="4"/>
+					</TransformGroup>
+				</Button.RenderTransform>
+				<Button.Background>
+					<ImageBrush ImageSource="/images/SearchIcon.png"/>
+				</Button.Background>
+			</Button>
+		</Grid>
+    </Grid>
+</Window>
