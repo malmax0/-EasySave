@@ -10,9 +10,9 @@
         public string LogExtension { set; get; }
         public  string PathStates { set; get; }
         public string[] CyptoExtension { set; get; }
-        public string Buisnessoft { set; get; }
-        public string FilesPrio { get; set; }
-        public string LimitSize { get; set; }
-     }
+        public string buisnessoft { set; get; }
+
+
+    }
 
 }

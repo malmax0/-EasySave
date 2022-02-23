@@ -179,11 +179,5 @@
   <ItemGroup>
     <Resource Include="View\HomeIcon.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\PauseIcon.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="View\StopIcon.png" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

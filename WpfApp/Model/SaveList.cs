@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace WpfApp.Model
 {
@@ -15,7 +14,7 @@ namespace WpfApp.Model
         public string Destination { get; set; }
         public string Type { get; set; }
         public string CryptoSoft { get; set; }
-        public string MegaOctets { get; set; }
-        public string Progress { get; set; }
+        public string Situation { get; set; }
+        public string MegaOctets { get; set; } 
     }
 }

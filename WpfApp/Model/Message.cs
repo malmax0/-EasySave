@@ -229,22 +229,9 @@ namespace WpfApp.Model
                 "Logiciel métier"
             }
             ,
-            {// 44
+            {
                 "Business software detected",
                 "Logiciel metier detecté"
-            },
-            {
-                "Priority files (ex format: .txt, .doc)",
-                "Fichiers prioritaires (ex format: .txt, .doc)"
-            },
-            {
-                "File size limit (in Kilobytes)",
-                "Taille limite d'un fichier (en Kilo octets)"
-            },
-
-            {
-                "Another instance of EasySave is running, we cannot open a new instance",
-                "Une autre instance d'EasySave est en cours d'execution, nous ne pouvons pas ouvrir une nouvelle instance du logiciel"
             }
 
         };

@@ -16,10 +16,11 @@ namespace WpfApp.ViewModel
             param.LogExtension = a[3].Split(' ')[1];
             param.PathCrypt = a[4];
             param.CyptoExtension = a[5].Split(',');
-            param.Buisnessoft = a[6];
-            param.FilesPrio = a[7];
-            param.LimitSize = a[8];
+            param.buisnessoft = a[6];
             Config.Write(param);
+
+
+
 
         }
         public static ItemSettings getparam()

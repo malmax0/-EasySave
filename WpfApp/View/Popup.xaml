@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="INFO" Height="286.78" Width="580.339" WindowStyle="None" Background="#FF2A2E36" BorderBrush="#FF2F60D3" Margin="0" BorderThickness="2" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Topmost="True">
     <Grid Margin="33,37,39.4,-0.2">
+
         <Button x:Name="Confirm" Content="OK" HorizontalAlignment="Left" Margin="214,204,0,-36" VerticalContentAlignment="Center" VerticalAlignment="Top" Width="75" Background="#FF2C4E9E" BorderBrush="Black" Click="Confirm_Click"/>
         <TextBlock x:Name="PopupText" HorizontalAlignment="Left" Margin="0,31,0,0" TextWrapping="Wrap" TextAlignment="Center" Text="text" VerticalAlignment="Top" FontSize="16" Foreground="White" FontFamily="Open Sans Semibold" Height="168" Width="488"/>
 

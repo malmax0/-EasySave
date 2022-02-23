@@ -16,48 +16,32 @@
             <ColumnDefinition Width="106*"/>
             <ColumnDefinition Width="0*"/>
         </Grid.ColumnDefinitions>
-        <Grid x:Name="HOME" Grid.ColumnSpan="5" Grid.Column="1" Margin="9.4,16,7.6,34.2">
+        <Grid x:Name="HOME" Grid.ColumnSpan="5" Grid.Column="1" Margin="9.4,16,7.6,34.2" d:IsHidden="True">
             <Label x:Name="LabelTask" Content="Backup Tasks" HorizontalAlignment="Left" Height="47" VerticalAlignment="Top" Width="584" FontFamily="Open Sans Semibold" FontSize="24" Foreground="White"/>
-            <Border x:Name="Border_Options" BorderThickness="1" HorizontalAlignment="Left" Height="40" Margin="0,59,0,0" VerticalAlignment="Top" Width="133" Background="#FF2A2E36" CornerRadius="15">
+            <Border x:Name="Border_Launch_Delete" BorderThickness="1" HorizontalAlignment="Left" Height="40" Margin="0,59,0,0" VerticalAlignment="Top" Width="131" Background="#FF2A2E36" CornerRadius="15">
                 <Grid Margin="0,0,33.6,3.4">
-                    <Button x:Name="DeleteButton" HorizontalAlignment="Left" Height="30" Margin="-49,0,0,0" VerticalAlignment="Top" Width="40" BorderBrush="{x:Null}" RenderTransformOrigin="-1.806,0.752" Click="DeleteBackup_Click" Style="{StaticResource MyButton}">
+                    <Button x:Name="DeleteButton" HorizontalAlignment="Left" Height="30" Margin="77,0,-21,0" VerticalAlignment="Top" Width="40" BorderBrush="{x:Null}" RenderTransformOrigin="-1.806,0.752" Click="DeleteBackup_Click" Style="{StaticResource MyButton}">
                         <Button.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>
                                 <SkewTransform/>
                                 <RotateTransform/>
-                                <TranslateTransform Y="4" X="60"/>
+                                <TranslateTransform Y="4"/>
                             </TransformGroup>
                         </Button.RenderTransform>
                         <Button.Background>
                             <ImageBrush ImageSource="deleteIcon.png"/>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="LaunchButton" HorizontalAlignment="Left" Margin="78,5,-22,0" VerticalAlignment="Top" Height="30" Width="40" Foreground="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="-4.83,0.469" Click="LaunchBackup_Click" Style="{StaticResource MyButton}">
+                    <Button x:Name="LaunchButton" HorizontalAlignment="Left" Margin="18,5,0,0" VerticalAlignment="Top" Height="30" Width="40" Foreground="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="-4.83,0.469" Click="LaunchBackup_Click" Style="{StaticResource MyButton}">
                         <Button.Background>
                             <ImageBrush ImageSource="playIcon.jpg"/>
-                        </Button.Background>
-                    </Button>
-                    <Button x:Name="PauseButton" HorizontalAlignment="Left" Visibility="Hidden" Margin="78,5,-22,0" VerticalAlignment="Top" Height="30" Width="40" Foreground="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="-4.83,0.469" Click="Pause_Click" Style="{StaticResource MyButton}">
-                        <Button.Background>
-                            <ImageBrush ImageSource="PauseIcon.png"/>
-                        </Button.Background>
-                    </Button>
-                    <Button x:Name="StopButton" Visibility="Hidden" HorizontalAlignment="Left" Margin="143,5,-78.4,0" VerticalAlignment="Top" Height="30" Width="33" Foreground="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="-4.83,0.469" Click="Stop_Click" Style="{StaticResource MyButton}">
-                        <Button.Background>
-                            <ImageBrush ImageSource="StopIcon.png"/>
-                        </Button.Background>
-                    </Button>
-                    <Button x:Name="ResumeButton" Visibility="Hidden" HorizontalAlignment="Left" Margin="78,5,-20.4,0" VerticalAlignment="Top" Height="30" Width="40" Foreground="{x:Null}" BorderBrush="{x:Null}" RenderTransformOrigin="-4.83,0.469" Click="Resume_Click" Style="{StaticResource MyButton}">
-                        <Button.Background>
-                            <ImageBrush ImageSource="playicon.jpg"/>
                         </Button.Background>
                     </Button>
                 </Grid>
             </Border>
             <Border x:Name="Border_GRRID" BorderThickness="1" HorizontalAlignment="Left" Margin="0,114,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.266,1.668" Height="352" Width="1067" CornerRadius="15" BorderBrush="#FF2A2E36">
-                <syncfusion:SfDataGrid x:Name="GRRID" GridLinesVisibility="Horizontal" HeaderStyle="{StaticResource MyGrid}" HeaderLinesVisibility="Horizontal" HorizontalAlignment="Center" Height="327" Margin="20.2,14.2,7.4,0" VerticalAlignment="Top" Width="1038" ColumnSizer="AutoLastColumnFill" BorderBrush="{x:Null}" UseLayoutRounding="True" SelectionMode="Multiple" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CurrentCellBorderBrush="{x:Null}" RowHoverHighlightingBrush="#FF4489DF" RowSelectionBrush="#FF69A9C2" CurrentCellBorderThickness="0,2" BorderThickness="0,1" NavigationMode="Row" Foreground="White" HeaderRowHeight="28">
-                </syncfusion:SfDataGrid>
+                <syncfusion:SfDataGrid x:Name="GRRID" GridLinesVisibility="Horizontal" HeaderLinesVisibility="Horizontal" HorizontalAlignment="Center" Height="327" Margin="20.2,14.2,7.4,0" VerticalAlignment="Top" Width="1038" ColumnSizer="AutoLastColumnFill" BorderBrush="{x:Null}" UseLayoutRounding="True" SelectionMode="Multiple" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CurrentCellBorderBrush="{x:Null}" RowHoverHighlightingBrush="#FF4489DF" RowSelectionBrush="#FF69A9C2" CurrentCellBorderThickness="0,2" BorderThickness="0,1" NavigationMode="Row" Foreground="White"/>
             </Border>
             <Border x:Name="Border_ShowAdd" BorderThickness="1" HorizontalAlignment="Left" Height="40" Margin="993,59,0,0" VerticalAlignment="Top" Width="73" Background="#FF2A2E36" CornerRadius="15">
                 <Button x:Name="ShowAddButton" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="30" BorderBrush="{x:Null}" RenderTransformOrigin="-1.806,0.752" Style="{StaticResource MyButton}" Margin="21.2,-0.8,0,0" Click="ShowAddButton_Click">
@@ -161,7 +145,7 @@
                 <ImageBrush ImageSource="HomeIcon.png"/>
             </Button.Background>
         </Button>
-        <Grid x:Name="SETTINGS" Grid.ColumnSpan="7" Margin="11,4,-2.4,21.2" RenderTransformOrigin="0.5,0.5" d:IsHidden="True">
+        <Grid x:Name="SETTINGS" Grid.ColumnSpan="7" Margin="11,4,-2.4,21.2" RenderTransformOrigin="0.5,0.5">
             <Grid.RenderTransform>
                 <TransformGroup>
                     <ScaleTransform/>
@@ -171,9 +155,9 @@
                 </TransformGroup>
             </Grid.RenderTransform>
             <Label x:Name="LabelSettings" Content="Settings" HorizontalAlignment="Left" Width="496" FontFamily="Open Sans Semibold" FontSize="24" Foreground="White" Margin="22,10,0,0" Height="55" VerticalAlignment="Top" RenderTransformOrigin="0.622,0.834"/>
-            <Border x:Name="Border" BorderThickness="1" HorizontalAlignment="Left" Height="342" Margin="203,72,0,0" VerticalAlignment="Top" Width="703" Background="#FF2A2E36" CornerRadius="15">
+            <Border x:Name="Border" BorderThickness="1" HorizontalAlignment="Left" Height="259" Margin="203,72,0,0" VerticalAlignment="Top" Width="703" Background="#FF2A2E36" CornerRadius="15">
                 <Grid x:Name="AddNew1" Margin="0.2,0.2,-0.6,0.6">
-                    <Button x:Name="Modify" Content="Modif" HorizontalAlignment="Left" Height="27" Margin="559,287,0,0" VerticalAlignment="Top" Width="105" Background="#FF69A9C2" BorderBrush="#FF202228" Foreground="#FF202228" Click="Modify_Click"/>
+                    <Button x:Name="Modify" Content="Modif" HorizontalAlignment="Left" Height="24" Margin="559,212,0,0" VerticalAlignment="Top" Width="105" Background="#FF69A9C2" BorderBrush="#FF202228" Foreground="#FF202228" Click="Modify_Click"/>
                     <TextBox x:Name="StatePath" HorizontalAlignment="Left" Height="19" Margin="36,39,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="254" BorderBrush="#FF69A9C2" Background="#FF202228" Foreground="White"/>
                     <Label x:Name="LabelLanguage" Content="Language :" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="254" RenderTransformOrigin="0.64,0.763" Margin="410,13,0,0" Foreground="#FF69A9C2"/>
                     <Button x:Name="FindState" Content="..." HorizontalAlignment="Left" Height="19" Margin="313,39,0,0" VerticalAlignment="Top" Width="20" Click="FindState_Click" RenderTransformOrigin="-0.23,0.705" Background="#FF69A9C2" BorderBrush="#FF69A9C2"/>
@@ -190,17 +174,13 @@
                         <ComboBoxItem x:Name="SetJSON"  Content="JSON" BorderBrush="#FF69A9C2" Background="#FF202228" Foreground="White"/>
                     </ComboBox>
                     <Button x:Name="FindLog" Content="..." HorizontalAlignment="Left" Height="19" Margin="313,105,0,0" VerticalAlignment="Top" Width="20" Click="FindLog_Click" RenderTransformOrigin="-0.23,0.705" Background="#FF69A9C2" BorderBrush="#FF69A9C2"/>
-                    <TextBox x:Name="CryptoPath" HorizontalAlignment="Left" Height="19" Margin="36,167,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="254" BorderBrush="#FF69A9C2" Background="#FF202228" Foreground="White"/>
-                    <Button x:Name="FindCrypto" Content="..." HorizontalAlignment="Left" Height="19" Margin="313,167,0,0" VerticalAlignment="Top" Width="20" Click="FindCrypto_Click" RenderTransformOrigin="-0.23,0.705" Background="#FF69A9C2" BorderBrush="#FF69A9C2"/>
-                    <Label x:Name="LabelCryptoSoftPath" Content="CryptoSoft Path" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="254" RenderTransformOrigin="0.64,0.763" Margin="36,141,0,0" Foreground="#FF69A9C2"/>
-                    <Label x:Name="LabelCryptoExt" Content="Crypto Extensions" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="254" RenderTransformOrigin="0.64,0.763" Margin="410,141,0,0" Foreground="#FF69A9C2"/>
-                    <TextBox x:Name="CryptoExtension" HorizontalAlignment="Left" Height="19" Margin="410,167,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="254" BorderBrush="#FF69A9C2" Background="#FF202228" Foreground="White"/>
-                    <TextBox x:Name="LogicielMetier" HorizontalAlignment="Left" Height="19" Margin="36,227,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="254" BorderBrush="#FF69A9C2" Background="#FF202228" Foreground="White"/>
-                    <Label x:Name="LabelLogicielMetier" Content="Logiciel métier" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="254" RenderTransformOrigin="0.64,0.763" Margin="36,201,0,0" Foreground="#FF69A9C2"/>
-                    <Label x:Name="LabelFilesPrio" Content="Fichiers prio" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="254" RenderTransformOrigin="0.64,0.763" Margin="410,201,0,0" Foreground="#FF69A9C2"/>
-                    <Label x:Name="LabelLimitSize" Content="Taille limite" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="254" RenderTransformOrigin="0.64,0.763" Margin="36,261,0,0" Foreground="#FF69A9C2"/>
-                    <TextBox x:Name="FilesPrio" HorizontalAlignment="Left" Height="19" Margin="410,227,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="254" BorderBrush="#FF69A9C2" Background="#FF202228" Foreground="White"/>
-                    <TextBox x:Name="LimitSize" HorizontalAlignment="Left" Height="19" Margin="36,287,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="254" BorderBrush="#FF69A9C2" Background="#FF202228" Foreground="White" PreviewTextInput="LimitSize_PreviewTextInput"/>
+                    <TextBox x:Name="CryptoPath" HorizontalAlignment="Left" Height="19" Margin="36,164,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="254" BorderBrush="#FF69A9C2" Background="#FF202228" Foreground="White"/>
+                    <Button x:Name="FindCrypto" Content="..." HorizontalAlignment="Left" Height="19" Margin="313,164,0,0" VerticalAlignment="Top" Width="20" Click="FindCrypto_Click" RenderTransformOrigin="-0.23,0.705" Background="#FF69A9C2" BorderBrush="#FF69A9C2"/>
+                    <Label x:Name="LabelCryptoSoftPath" Content="CryptoSoft Path" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="254" RenderTransformOrigin="0.64,0.763" Margin="36,138,0,0" Foreground="#FF69A9C2"/>
+                    <Label x:Name="LabelCryptoExt" Content="Crypto Extensions" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="254" RenderTransformOrigin="0.64,0.763" Margin="410,138,0,0" Foreground="#FF69A9C2"/>
+                    <TextBox x:Name="CryptoExtension" HorizontalAlignment="Left" Height="19" Margin="410,164,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="254" BorderBrush="#FF69A9C2" Background="#FF202228" Foreground="White"/>
+                    <TextBox x:Name="LogicielMetier" HorizontalAlignment="Left" Height="19" Margin="36,217,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="254" BorderBrush="#FF69A9C2" Background="#FF202228" Foreground="White"/>
+                    <Label x:Name="LabelLogicielMetier" Content="Logiciel métier" HorizontalAlignment="Left" Height="26" VerticalAlignment="Top" Width="254" RenderTransformOrigin="0.64,0.763" Margin="36,191,0,0" Foreground="#FF69A9C2"/>
                 </Grid>
             </Border>
         </Grid>

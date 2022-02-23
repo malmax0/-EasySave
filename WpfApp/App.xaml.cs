@@ -16,7 +16,6 @@ namespace WpfApp
     {
             public App()
             {
-
                 //Register Syncfusion license
                 Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NTc4Nzg2QDMxMzkyZTM0MmUzMGpzZTlwcWduSEthcEFsM1Z3amZKSXlyY3Y5bVZ2SVlNRTBsVkcwWWFzK1E9");
             }

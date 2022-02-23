@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using WpfApp.Model;
 
 namespace WpfApp.ViewModel
@@ -15,180 +11,133 @@ namespace WpfApp.ViewModel
 
     public class Save
     {
-        private List<Thread> task = new List<Thread>();
         // Subject for progress
         public int Progress { get; set; } = 0;
 
         private readonly Langue _lang = new Langue();
-        public List<bool> ListeBoule = new List<bool>();
 
-        public string MakeASave(string taskNumbers, progresse progre)
+        public string MakeASave(string taskNumbers,progresse progre)
         {
-
-            string[] listTaskNumbers = taskNumbers.Split(';');
-            Setting param = new Setting();
-
+            
+            var listTaskNumbers = taskNumbers.Split(';');
             foreach (string taskNumber in listTaskNumbers)
             {
-                
                 int idTaskNumber = Int32.Parse(taskNumber);
 
-                ItemStateClass[] r = JsonStateLog.Read(param.PathStates());
+                var r = JsonStateLog.Read();
 
-                Thread temp = new Thread(() => DoASave(r, idTaskNumber, progre, param));
+                string source = "";
+                string target = "";
+                string BackupType = "";
+                string idToSave = "";
+                string nbFileLeftToDo = "";
+                string saveName = "";
+                string encrypt = "False";
 
-                temp.Start();
-                task.Add(temp);
 
+                // Verify taskNumber enter is correct and store source and target
+                foreach (ItemStateClass element in r)
+                {
+                    int id = Int32.Parse(element.Id);
+                    if (id == idTaskNumber)
+                    {
+                        source = element.FileSource;
+                        target = element.FileTarget;
+                        BackupType = element.BackupType;
+                        idToSave = element.Id;
+                        nbFileLeftToDo = element.NbFilesLeftToDo;
+                        saveName = element.Name;
+                        encrypt = element.Encrypt;
+                        break;
+                    }
+                    else if (id == r.Length)
+                    {
+                        return _lang.Translation(26);
+                    }
+                }
+
+                //Create all of the directories
+                foreach (string dirPath in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(source, target));
+                }
+                //Copy all the files & Replaces any files with the same name
+                var SourcesFilesPath = Directory.GetFiles(source, "*.*", SearchOption.AllDirectories);
+                int count = 0;
+                Setting param= new Setting();
+                string[] whiteList = param.CyptoExtension();
+                foreach (string SourceFilePath in SourcesFilesPath)
+                {
+                   if (Proces.isexist(param.buisnessoft()))
+                    {
+                        return _lang.Translation(44);
+                    }
+                    
+
+                    string extension = "";
+                    if (SourceFilePath.Split('.').Length > 1)
+                    {
+                        extension = "." + SourceFilePath.Split('.')[1];
+                    }
+                    else
+                    {
+
+                    }
+                    if (encrypt == "True" && whiteList.Contains(extension))
+                    {
+
+                        if (BackupType == "Differential")
+                        {
+                            if (whiteList.ToList().Contains(SourceFilePath.Split('\\').Last()) && !(File.Exists(SourceFilePath.Replace(source, target))) && File.GetLastWriteTime(SourceFilePath) > File.GetLastWriteTime(SourceFilePath.Replace(source, target)))
+                            {
+                                if (_diffentialFileCompare(SourceFilePath, SourceFilePath.Replace(source, target)) == true)
+                                {
+                                    continue;
+                                }
+                            }
+                            else if (!(File.Exists(SourceFilePath.Replace(source, target))) && File.GetLastWriteTime(SourceFilePath) <= File.GetLastWriteTime(SourceFilePath.Replace(source, target)))
+                            {
+                                continue;
+                            }
+                        }
+                        count = _encryptedCopy(SourceFilePath, SourcesFilesPath, source, target, count, idToSave, nbFileLeftToDo, saveName, 0);
+                        progre((int)Math.Round((double)count / SourcesFilesPath.Length * 100));
+
+                    }
+                    else
+                    {
+                        if (encrypt == "False" && BackupType == "Differential")
+                        {
+                            if (whiteList.ToList().Contains(SourceFilePath.Split('\\').Last()) && !(File.Exists(SourceFilePath.Replace(source, target))) && File.GetLastWriteTime(SourceFilePath) > File.GetLastWriteTime(SourceFilePath.Replace(source, target)))
+                            {
+                                if (_diffentialFileCompare(SourceFilePath, SourceFilePath.Replace(source, target)) == true)
+                                {
+                                    count = _copy(SourceFilePath, SourcesFilesPath, source, target, count, idToSave, nbFileLeftToDo, saveName);
+                                    progre((int)Math.Round((double)count / SourcesFilesPath.Length * 100));
+                                }
+                            }
+                            else if (!(File.Exists(SourceFilePath.Replace(source, target))) && File.GetLastWriteTime(SourceFilePath) <= File.GetLastWriteTime(SourceFilePath.Replace(source, target)))
+                            {
+                                count = _copy(SourceFilePath, SourcesFilesPath, source, target, count, idToSave, nbFileLeftToDo, saveName);
+                                progre((int)Math.Round((double)count / SourcesFilesPath.Length * 100));
+                            }
+
+                        }
+                        else
+                        {
+                            count = _copy(SourceFilePath, SourcesFilesPath, source, target, count, idToSave, nbFileLeftToDo, saveName);
+                            progre((int)Math.Round((double)count / SourcesFilesPath.Length * 100));
+                        }
+
+
+
+
+                    }
+                }
             }
-
-            Thread BusinessSoft = new Thread(()=>PauseBusinessSoft(param));
-            BusinessSoft.Start();
-            while (task.Count != 0) { }
             return "\n" + _lang.Translation(31);
-
         }
-
-        private void DoASave(ItemStateClass[] r, int idTaskNumber, progresse progre, Setting param)
-        {
-
-            string source = "";
-            string target = "";
-            string idToSave = "";
-            string BackupType = "";
-            string nbFileLeftToDo = "";
-            string sizeOfTheFile = "";
-            string saveName = "";
-            string encrypt = "";
-            int sizeMaxTransfert = Int32.Parse(param.LimitSize())*1000;
-            foreach (Thread item in task)
-            {
-                ListeBoule.Add(true);
-            }
-            // Verify taskNumber enter is correct and store source and target
-            foreach (ItemStateClass element in r)
-            {
-                int id = Int32.Parse(element.Id);
-                if (id == idTaskNumber)
-                {
-                    source = element.FileSource;
-                    target = element.FileTarget;
-                    BackupType = element.BackupType;
-                    idToSave = element.Id;
-                    nbFileLeftToDo = element.NbFilesLeftToDo;
-                    saveName = element.Name;
-                    encrypt = element.Encrypt;
-                    Thread.CurrentThread.Name = element.Id;
-                    if (Int32.Parse(element.TotalFileSize) > sizeMaxTransfert)
-                    {
-                        if (ListeBoule.Contains(false))
-                        { 
-                            while (true)
-                            {
-
-
-                            }
-                        
-                        }
-
-                        ListeBoule[Int32.Parse(element.Id)-1] = false;
-                    }
-                    else
-                    {
-                        ListeBoule[Int32.Parse(element.Id)-1] = true;
-                    }
-                    break;
-                }
-            }
-
-
-            //Create all of the directories
-            foreach (string dirPath in Directory.GetDirectories(source, "*", SearchOption.AllDirectories))
-            {
-                Directory.CreateDirectory(dirPath.Replace(source, target));
-            }
-            //Copy all the files & Replaces any files with the same name
-            var SourcesFilesPath = Directory.GetFiles(source, "*.*", SearchOption.AllDirectories);
-            int count = 0;
-
-            string[] whiteList = param.CyptoExtension();
-            foreach (string SourceFilePath in SourcesFilesPath)
-            {
-
-                string extension = "";
-                if (SourceFilePath.Split('.').Length > 1)
-                {
-                    extension = "." + SourceFilePath.Split('.')[1];
-                }
-                if (encrypt == "True" && whiteList.Contains(extension))
-                {
-
-                    if (BackupType == "Differential" && (File.Exists(SourceFilePath.Replace(source, target))))
-                    {
-                        if (File.GetLastWriteTime(SourceFilePath) > File.GetLastWriteTime(SourceFilePath.Replace(source, target)))
-                        {
-                            if (_diffentialFileCompare(SourceFilePath, SourceFilePath.Replace(source, target)) == true)
-                            {
-                                count = _encryptedCopy(SourceFilePath, SourcesFilesPath, source, target, count, idToSave, nbFileLeftToDo, saveName, 0, param);
-
-                            }
-                            else
-                            {
-                                count++;
-                            }
-                        }
-                        else
-                        {
-                            count++;
-                        }
-                    }
-                    else
-                    {
-                        count = _encryptedCopy(SourceFilePath, SourcesFilesPath, source, target, count, idToSave, nbFileLeftToDo, saveName, 0, param);
-
-                    }
-
-
-                }
-                else
-                {
-                    if (encrypt == "False" && BackupType == "Differential" && File.Exists(SourceFilePath.Replace(source, target)))
-                    {
-                        if (whiteList.ToList().Contains(extension) && File.GetLastWriteTime(SourceFilePath) > File.GetLastWriteTime(SourceFilePath.Replace(source, target)))
-                        {
-                            if (_diffentialFileCompare(SourceFilePath, SourceFilePath.Replace(source, target)) == true)
-                            {
-                                count = _copy(SourceFilePath, SourcesFilesPath, source, target, count, idToSave, nbFileLeftToDo, saveName, param);
-                            }
-                            else
-                            {
-                                count++;
-                            }
-                        }
-                        else
-                        {
-                            count++;
-                        }
-
-
-                    }
-                    else
-                    {
-                        count = _copy(SourceFilePath, SourcesFilesPath, source, target, count, idToSave, nbFileLeftToDo, saveName, param);
-                    }
-
-
-
-
-                }
-                progre((int)Math.Round((double)count / SourcesFilesPath.Length * 100));
-            }
-            task.Remove(Thread.CurrentThread);
-        }
-
-
-
-        private int _copy(string SourceFilePath, string[] SourcesFilesPath, string source, string target, int count, string idToSave, string nbFileLeftToDo, string saveName, Setting param)
+        private int _copy(string SourceFilePath, string[] SourcesFilesPath, string source, string target, int count, string idToSave, string nbFileLeftToDo, string saveName)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -198,7 +147,6 @@ namespace WpfApp.ViewModel
             string elapsedTime = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
             count += 1;
             Progress = (int)Math.Round((double)count / SourcesFilesPath.Length * 100);
-
             if (Progress == 100)
             {
                 States.UpdateStatus(idToSave, Progress, 0, "Inactive");
@@ -207,14 +155,12 @@ namespace WpfApp.ViewModel
             {
                 States.UpdateStatus(idToSave, Progress, Int32.Parse(nbFileLeftToDo) - 1, "Active");
             }
-            ListeBoule[Int32.Parse(Thread.CurrentThread.Name)-1] = true;
-            _writeLog(saveName, SourceFilePath, SourceFilePath.Replace(source, target), SourceFilePath.Length, elapsedTime, 0, false, param);
-
+            _writeLog(saveName, SourceFilePath, SourceFilePath.Replace(source, target), SourceFilePath.Length, elapsedTime, 0,false);
             return count;
 
         }
 
-        private int _encryptedCopy(string SourceFilePath, string[] SourcesFilesPath, string source, string target, int count, string idToSave, string nbFileLeftToDo, string saveName, int encryptTime, Setting parametre)
+        private int _encryptedCopy(string SourceFilePath, string[] SourcesFilesPath, string source, string target, int count, string idToSave, string nbFileLeftToDo, string saveName, int encryptTime)
         {
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
@@ -222,7 +168,7 @@ namespace WpfApp.ViewModel
             string[] tab = SourceFilePath.Split(dbl);
 
             int tempBeg = 0;
-
+            Setting parametre = new Setting();
             //ProcessStartInfo ProCrypto = new ProcessStartInfo("D:\\user\\projet\\programation_system\\crypto\\WpfApp\\CryptoSoft\\cryptosoft.exe");
             ProcessStartInfo ProCrypto = new ProcessStartInfo(parametre.PathCrypt());
             ProCrypto.WindowStyle = ProcessWindowStyle.Hidden;
@@ -264,12 +210,11 @@ namespace WpfApp.ViewModel
             {
                 States.UpdateStatus(idToSave, Progress, Int32.Parse(nbFileLeftToDo) - 1, "Active");
             }
-            ListeBoule[Int32.Parse(Thread.CurrentThread.Name) - 1] = true;
-            _writeLog(saveName, SourceFilePath, SourceFilePath.Replace(source, target), SourceFilePath.Length, elapsedTime, TempCrypt, true, parametre);
+            _writeLog(saveName, SourceFilePath, SourceFilePath.Replace(source, target), SourceFilePath.Length, elapsedTime, TempCrypt,true);
             return count;
         }
 
-
+    
         private bool _diffentialFileCompare(string file1, string file2)
         {
             int file1byte;
@@ -321,7 +266,7 @@ namespace WpfApp.ViewModel
             return ((file1byte - file2byte) == 0);
         }
 
-        private void _writeLog(string name, string fileSource, string fileTarget, int fileSize, string transferTime, int encrypte, bool iscrypt, Setting param)
+        private void _writeLog(string name, string fileSource, string fileTarget, int fileSize, string transferTime, int encrypte,bool iscrypt)
         {
             var newLog = new ItemLogClass()
             {
@@ -337,186 +282,23 @@ namespace WpfApp.ViewModel
 
             };
 
+
+
+            Setting param = new Setting();
             //Change extension for log file
             switch (param.LogExtension())
-            {
+                {
                 case "XML":
-
-                    XmlStateLog.Write(newLog, param, Thread.CurrentThread.Name);
-
+                    XmlStateLog.Write(newLog);
                     break;
 
                 case "JSON":
+                    JsonStateLog.Write(newLog);
+                     break;
 
-                    JsonStateLog.Write(param, newLog, Thread.CurrentThread.Name);
-
-                    break;
-
-            }
+                }
 
         }
-        public void pause(string taskNumbers) {
-            if (taskNumbers == "all")
-            {
-                foreach (Thread tache in task)
-                {
-                    tache.Suspend();
-                }
-            }
-            else
-            {
-                string[] listTaskNumbers = taskNumbers.Split(';');
-                foreach (string taskNumber in listTaskNumbers)
-                {
-                    Setting param = new Setting();
-                    int idTaskNumber = Int32.Parse(taskNumber);
-
-
-                    ItemStateClass[] r = JsonStateLog.Read(param.PathStates());
-                    foreach (ItemStateClass element in r)
-                    {
-                        int id = Int32.Parse(element.Id);
-                        if (id == idTaskNumber)
-                        {
-                            foreach (Thread tache in task)
-                            {
-                                if (tache.Name == element.Id)
-                                {
-                                    tache.Suspend();
-                                }
-                            }
-
-
-
-
-                            break;
-                        }
-                    }
-                }
-
-            }
-        }
-        public void resume(string taskNumbers)
-        {
-            if (taskNumbers == "all")
-            {
-                foreach (Thread tache in task)
-                {
-                    tache.Resume();
-                }
-            }
-            else
-            {
-                string[] listTaskNumbers = taskNumbers.Split(';');
-                foreach (string taskNumber in listTaskNumbers)
-                {
-                    Setting param = new Setting();
-                    int idTaskNumber = Int32.Parse(taskNumber);
-
-
-                    ItemStateClass[] r = JsonStateLog.Read(param.PathStates());
-                    foreach (ItemStateClass element in r)
-                    {
-                        int id = Int32.Parse(element.Id);
-                        if (id == idTaskNumber)
-                        {
-                            foreach (Thread tache in task)
-                            {
-                                if (tache.Name == element.Id)
-                                {
-                                    tache.Resume();
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-
-            }
-        }
-
-        public void kill(string taskNumbers)
-        {
-            if (taskNumbers == "all")
-            {
-                
-                foreach (Thread tache in task)
-                {
-                    Setting setting = new Setting();
-                    ItemStateClass[] state= JsonStateLog.Read(setting.PathStates());
-                    try
-                    {
-                        tache.Resume();
-                    }
-                    catch (System.Threading.ThreadStateException e)
-                    {
-
-                    }
-                    tache.Abort();
-                    JsonStateLog.Write(setting, state);
-                }
-            }
-            else
-            {
-                string[] listTaskNumbers = taskNumbers.Split(';');
-                foreach (string taskNumber in listTaskNumbers)
-                {
-                    Setting param = new Setting();
-                    int idTaskNumber = Int32.Parse(taskNumber);
-
-
-                    ItemStateClass[] r = JsonStateLog.Read(param.PathStates());
-                    foreach (ItemStateClass element in r)
-                    {
-                        int id = Int32.Parse(element.Id);
-                        if (id == idTaskNumber)
-                        {
-                            foreach (Thread tache in task)
-                            {
-                                if (tache.Name == element.Id)
-                                {
-                                    tache.Abort();
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
-
-            }
-
-
-        }
-
-
-        public void PauseBusinessSoft(Setting param)
-        {
-            bool InPause=false;
-            while(task.Count!=0)
-            {
-
-                if (Proces.isexist(param.Buisnessoft()))
-                {
-                    pause("all");
-                    InPause = true;
-                }
-                else if(InPause)
-                {
-                    resume("all");
-                    InPause = false;
-                }
-            }
-
-        }
-
-
-
-
-
-
-
-
-
     }
 }
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
-using System.Windows.Threading;
 
 namespace WpfApp.Model
 {
@@ -9,88 +8,42 @@ namespace WpfApp.Model
     public static class JsonStateLog
     {
 
-        public static ItemStateClass[] Read(string path)
+        public static ItemStateClass[] Read()
         {
-            ItemStateClass[] read = {new ItemStateClass()};
-             string etat="d";
-             while(etat!="")
-            {
-                try
-                {
-                                etat = "";
-                    string jsonString = File.ReadAllText(path);
-                        read = JsonSerializer.Deserialize<ItemStateClass[]>(jsonString);
-                    
-                }
-                    catch (System.IO.IOException e)
-                {
-                      
-                      etat = e.ToString();
+            Setting setting = new Setting();
+            string jsonString = File.ReadAllText(setting.PathStates());
+            var read = JsonSerializer.Deserialize<ItemStateClass[]>(jsonString);
 
-                }
-                catch(Exception e)
-                {
-                    Console.WriteLine("Exception: " + e.Message);
-                }
-
-            }
             return read;
-
-
         }
 
-        public static void Write( Setting setting, params ItemStateClass[] itemToWrite)
+        public static void Write( params ItemStateClass[] itemToWrite)
         {
-            string etat = "d";
-            while (etat != "")
+            Setting setting = new Setting();
+            try
             {
-                try
-                {
-                    etat = "";
-                    JsonSerializerOptions options = new JsonSerializerOptions() { WriteIndented = true };
-                    string jsonString = JsonSerializer.Serialize(itemToWrite, options);
-                    File.WriteAllText(setting.PathStates(), jsonString);
-
-                }
-                catch (System.IO.IOException e)
-                {
-
-                    etat = e.ToString();
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Exception: " + e.Message);
-                }
+                JsonSerializerOptions options = new JsonSerializerOptions() { WriteIndented = true };
+                string jsonString = JsonSerializer.Serialize(itemToWrite, options);
+                File.WriteAllText(setting.PathStates(), jsonString);
             }
-            
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
         }
-        public static void Write(Setting setting, ItemLogClass itemToWrite,params string[] task)
+        public static void Write(ItemLogClass itemToWrite)
         {
-            
-            string etat = "d";
-
-            while (etat != "")
+            Setting setting = new Setting();
+            try
             {
-                try
-                {
-                    etat = "";
-                    JsonSerializerOptions options = new JsonSerializerOptions() { WriteIndented = true };
-                    string jsonString = JsonSerializer.Serialize(itemToWrite, options) + "\n";
-                    File.AppendAllText(setting.PathLog() + itemToWrite.Date + ".Json", jsonString);
-                }
-                catch (System.IO.IOException e)
-                {
-
-                    etat = e.ToString();
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Exception: " + e.Message);
-                }
+                JsonSerializerOptions options = new JsonSerializerOptions() { WriteIndented = true };
+                string jsonString = JsonSerializer.Serialize(itemToWrite, options) + "\n";
+                File.AppendAllText(setting.PathLog() + itemToWrite.Date + ".Json", jsonString);
             }
-
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception: " + e.Message);
+            }
         }
 
         public static bool IsFileExist()

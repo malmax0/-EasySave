@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using WpfApp.Model;
-using WpfApp;
-using System.Windows.Threading;
 
 namespace WpfApp.ViewModel
 
@@ -46,44 +44,40 @@ namespace WpfApp.ViewModel
 				Progression = "0",
 				Encrypt = encryption.ToString()
 			};
-			Setting param = new Setting();
-			var tableauObjets = JsonStateLog.Read(param.PathStates());
+			var tableauObjets = JsonStateLog.Read();
 			tableauObjets = new List<ItemStateClass>(tableauObjets) { newTask }.ToArray();
-			
-			JsonStateLog.Write(param, tableauObjets);
+			JsonStateLog.Write(tableauObjets);
 			return _Langue.Translation(28);
 		}
 
 		public static List<SaveList> GetSaveList()
 		{
-			Setting param = new Setting();
 			if (!JsonStateLog.IsFileExist())
             {
-				JsonStateLog.Write(param);
+				JsonStateLog.Write();
 				//return _Langue.Translation(27);
             }
-			var r = JsonStateLog.Read(param.PathStates());
+			var r = JsonStateLog.Read();
 			if (r.Length == 0)
             {
 				//return _Langue.Translation(27);
             }
 			List<SaveList> StateList = new List<SaveList>();
-			foreach (ItemStateClass element in r)
+			foreach(ItemStateClass element in r)
             {
-				StateList.Add(new SaveList() { Id = element.Id, Label = element.Name, Source = element.FileSource, Destination = element.FileTarget, MegaOctets = element.TotalFileSize, Type = element.BackupType, CryptoSoft = element.Encrypt, Progress = $"{element.Progression} %"});
+				StateList.Add(new SaveList() { Id = element.Id, Label = element.Name, Source = element.FileSource, Destination = element.FileTarget, MegaOctets = element.TotalFileSize, Type = element.BackupType, CryptoSoft = element.Encrypt, Situation = element.State});
 			}
-            return StateList;
+			return StateList;
 		}
 		public static List<SaveList> GetSaveList(string name)
 		{
-			Setting param = new Setting();
-			var r = JsonStateLog.Read(param.PathStates());
+			var r = JsonStateLog.Read();
 			List<SaveList> StateList = new List<SaveList>();
 			foreach (ItemStateClass element in r)
 			{
 				if (element.Name == name)
 				{
-					StateList.Add(new SaveList() { Id = element.Id, Label = element.Name, Source = element.FileSource, Destination = element.FileTarget, Type = element.BackupType, MegaOctets = element.TotalFileSize, CryptoSoft = element.Encrypt, Progress = element.Progression });
+					StateList.Add(new SaveList() { Id = element.Id, Label = element.Name, Source = element.FileSource, Destination = element.FileTarget, Type = element.BackupType });
 				}
 			}
 			return StateList;
@@ -92,9 +86,8 @@ namespace WpfApp.ViewModel
 		// DeleteStatus supprime la save si elle existe et met à jour les id
 		public static string DeleteStatus(int saveId)
 		{
-			Setting param = new Setting();
-			if (_isExist(saveId)){
-                var r = JsonStateLog.Read(param.PathStates());
+			if(_isExist(saveId)){
+                var r = JsonStateLog.Read();
 				List<ItemStateClass> list = new List<ItemStateClass>(r);
 				list.RemoveAll(element => element.Id == saveId.ToString());
 				var newTab = list.ToArray();
@@ -107,7 +100,7 @@ namespace WpfApp.ViewModel
 						e.Id = newId.ToString();
                     }
                 }
-				JsonStateLog.Write(param, list.ToArray());
+				JsonStateLog.Write(list.ToArray());
 				return _Langue.Translation(30);
 			}
 			return _Langue.Translation(23);
@@ -116,8 +109,7 @@ namespace WpfApp.ViewModel
 		// Update status of taks during save
 		public static void UpdateStatus(string id, int progression, int nbFilesLeft, string state)
 		{
-			Setting param = new Setting();
-			var r = JsonStateLog.Read(param.PathStates());
+			var r = JsonStateLog.Read();
 			foreach(ItemStateClass e in r)
             {
 				if(e.Id == id)
@@ -127,16 +119,14 @@ namespace WpfApp.ViewModel
 					e.State = state;
                 }
             }
-				JsonStateLog.Write(param, r);
-
+			JsonStateLog.Write(r);
 		}
 
 		// isExists renvoie vrai si la save existe
 		private static bool _isExist(int saveId)
 		{
 			var id = saveId.ToString();
-			Setting param = new Setting();
-			var r = JsonStateLog.Read(param.PathStates());
+			var r = JsonStateLog.Read();
 			foreach(ItemStateClass element in r)
             {
 				if (element.Id == id)
@@ -160,13 +150,11 @@ namespace WpfApp.ViewModel
             }
 			return "OK";
         }
-		
 
 		// Add an id when create a task
 		private static string _AddId()
         {
-			Setting param = new Setting();
-			var r = JsonStateLog.Read(param.PathStates());
+			var r = JsonStateLog.Read();
 
 			var newId = 1;
 			if (!(r.Length == 0))

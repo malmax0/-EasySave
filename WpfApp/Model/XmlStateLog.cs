@@ -3,21 +3,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
-using System.Windows;
-using System.Windows.Threading;
+
 namespace WpfApp.Model
 {
     //writing 
     public static class XmlStateLog
     {
 
-        public static ItemLogClass[] Read(string path)
+        public static ItemLogClass[] Read()
         {
-
-           
+            Setting setting = new Setting();
             // Create a TextReader to read the file.
-
-            FileStream fs = new FileStream(path + DateTime.Now.ToString("MMMM dd, yyyy") + ".Xml", FileMode.OpenOrCreate);
+            FileStream fs = new FileStream(setting.PathLog() + DateTime.Now.ToString("MMMM dd, yyyy") + ".Xml", FileMode.OpenOrCreate);
             TextReader reader = new StreamReader(fs);
             try
                 {
@@ -40,21 +37,13 @@ namespace WpfApp.Model
 
         }
 
-        public static void Write(ItemLogClass itemToAdd, Setting setting,params string[] task)
+        public static void Write(ItemLogClass itemToAdd)
         {
-            string path = "";
-             if (task.Length > 0)
-            {
-                 path = setting.PathStates()+task[0];
-            }
-            else
-            {
-                 path = setting.PathStates() ;
-            }
+            Setting setting = new Setting();
             try
             {
                 //Read the file content
-                var itemsRead = Read(path);
+                var itemsRead = Read();
                 
                 //Identify the number of logs in the file
                 int length;
@@ -76,7 +65,7 @@ namespace WpfApp.Model
                 //Add the new log in the collection
                 itemToWrite[length] = itemToAdd;
                 //Write all the log
-                TextWriter textWriter = new StreamWriter(path + itemToAdd.Date + ".Xml");
+                TextWriter textWriter = new StreamWriter(setting.PathLog() + itemToAdd.Date + ".Xml");
                 XmlSerializer serializer = new XmlSerializer(typeof(ItemLogClass[]));
                 serializer.Serialize(textWriter, itemToWrite);
                 textWriter.Close();

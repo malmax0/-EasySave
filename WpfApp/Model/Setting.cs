@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 namespace WpfApp.Model
 {
-    public class Setting
+    class Setting
     {
         private ItemSettings Parametre;
 
@@ -39,17 +39,9 @@ namespace WpfApp.Model
         {
             return Parametre.CyptoExtension;
         }
-        public string Buisnessoft()
+        public string buisnessoft()
         {
-            return Parametre.Buisnessoft;
-        }
-        public string FilesPrio()
-        {
-            return Parametre.FilesPrio;
-        }
-        public string LimitSize()
-        {
-            return Parametre.LimitSize;
+            return Parametre.buisnessoft;
         }
         public ItemSettings GetSettings()
         {
