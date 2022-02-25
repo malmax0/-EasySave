@@ -1,7 +1,5 @@
 namespace WpfApp.Model
 {
-
-
     static class Message
     {
 
@@ -245,6 +243,11 @@ namespace WpfApp.Model
             {
                 "Another instance of EasySave is running, we cannot open a new instance",
                 "Une autre instance d'EasySave est en cours d'execution, nous ne pouvons pas ouvrir une nouvelle instance du logiciel"
+            },
+
+            {// 48
+                "Maximum number of simultaneous tasks",
+                "Nombre maximum de tâches en simultanées"
             }
 
         };

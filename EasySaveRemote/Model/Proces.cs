@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-namespace WpfApp.Model
+namespace EasySaveRemote
 {
     static class Proces
     {
@@ -10,7 +10,7 @@ namespace WpfApp.Model
         }
         public static void close()
         {
-            Process[] liste = Process.GetProcessesByName("WpfApp");
+            Process[] liste = Process.GetProcessesByName("EasySaveRemote");
             foreach(Process item in liste)
             {
                 item.Kill();

@@ -1,8 +1,9 @@
 ﻿namespace WpfApp.Model
 {
+    
     public class ItemStateClass
+    //Information of the state file
     {
-
         public string Id { get; set; }
         public string Name { get; set; }
         public string FileSource { get; set; }

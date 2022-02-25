@@ -2,27 +2,29 @@
 
 namespace WpfApp.ViewModel
 { 
-    //class for setting interaction 
+    //Class for settings interactions
     public static  class ConfigViewModel
     {
-        //change setting
+        //Functions which aim to change settings
 	    public static void PutInConfig(params string[] a)
 	    {
-            ItemSettings param = new ItemSettings();
-           
-            param.Language=a[0].Split(' ')[1];
-            param.PathStates = a[1];
-            param.PathLog = a[2];
-            param.LogExtension = a[3].Split(' ')[1];
-            param.PathCrypt = a[4];
-            param.CyptoExtension = a[5].Split(',');
-            param.Buisnessoft = a[6];
-            param.FilesPrio = a[7];
-            param.LimitSize = a[8];
+            ItemSettings param = new ItemSettings
+            {
+                Language = a[0].Split(' ')[1],
+                PathStates = a[1],
+                PathLog = a[2],
+                LogExtension = a[3].Split(' ')[1],
+                PathCrypt = a[4],
+                CyptoExtension = a[5].Split(','),
+                Buisnessoft = a[6],
+                FilesPrio = a[7].Split(','),
+                LimitSize = a[8],
+                LimitThread = a[9]
+            };
             Config.Write(param);
 
         }
-        public static ItemSettings getparam()
+        public static ItemSettings Getparam()
         {
             Setting param = new Setting();
             return param.GetSettings();

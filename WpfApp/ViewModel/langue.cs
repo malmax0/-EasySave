@@ -4,21 +4,21 @@ namespace WpfApp.ViewModel
 
 { 
      //the language procesor
-     class Langue
+     public class Langue
      {
-        private int _lang;
+        private readonly int _lang;
         
         public string Translation(int terme)
+        //Get a prefinished message in message.cs
         {
-
-            //return the message in the right language
             return Message.MessageTable[terme, _lang];
+            //Return the message in the right language
         }
 
-        //look in the setting file and take the language
         public  Langue()
+        //Look in the setting file and take the language
         {
-            //difined the language
+
             switch (Config.Read().Language)
             {
                 case "FR":
@@ -32,8 +32,10 @@ namespace WpfApp.ViewModel
                         _lang = 0;
                         break;
                     }
+
+                default:
+                    break;
             }
- 
         }
     }
 }

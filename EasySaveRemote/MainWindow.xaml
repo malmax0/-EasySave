@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EasySaveRemote"
+        Closing="close"
         mc:Ignorable="d" xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
-        Height="648.5" Width="1155.5" ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen" Icon="/images/save_icon.png" ShowInTaskbar="False" Title="EasySave" Background="#FF202228" WindowStyle="ThreeDBorderWindow">
+        Height="648.5" Width="1155.5" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Icon="/images/save_icon.png" ShowInTaskbar="True" Title="EasySave" Background="#FF202228" WindowStyle="ThreeDBorderWindow">
 	<Grid Margin="0,0,3.6,0.2" UseLayoutRounding="True">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="22*"/>
@@ -56,7 +57,7 @@
 				</Grid>
 			</Border>
 			<Border x:Name="Border_GRRID" BorderThickness="1" HorizontalAlignment="Left" Margin="0,114,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.266,1.668" Height="352" Width="1067" CornerRadius="15" BorderBrush="#FF2A2E36">
-				<syncfusion:SfDataGrid x:Name="GRRID" GridLinesVisibility="Horizontal" HeaderStyle="{StaticResource MyGrid}" HeaderLinesVisibility="Horizontal" HorizontalAlignment="Center" Height="327" Margin="20.2,14.2,7.4,0" VerticalAlignment="Top" Width="1038" ColumnSizer="AutoLastColumnFill" BorderBrush="{x:Null}" UseLayoutRounding="True" SelectionMode="Multiple" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CurrentCellBorderBrush="{x:Null}" RowHoverHighlightingBrush="#FF4489DF" RowSelectionBrush="#FF69A9C2" CurrentCellBorderThickness="0,2" BorderThickness="0,1" NavigationMode="Row" Foreground="White" HeaderRowHeight="28">
+                <syncfusion:SfDataGrid x:Name="GRRID" GridLinesVisibility="Horizontal" HeaderStyle="{StaticResource MyGrid}" HeaderLinesVisibility="Horizontal" HorizontalAlignment="Center" Height="327" Margin="20.2,14.2,7.4,0" VerticalAlignment="Top" Width="1038" ColumnSizer="AutoLastColumnFill" BorderBrush="{x:Null}" UseLayoutRounding="True" SelectionMode="Multiple" Background="{x:Null}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" CurrentCellBorderBrush="{x:Null}" RowHoverHighlightingBrush="#FF4489DF" RowSelectionBrush="#FF69A9C2" CurrentCellBorderThickness="0,2" BorderThickness="0,1" NavigationMode="Row" Foreground="White" HeaderRowHeight="28">
 				</syncfusion:SfDataGrid>
 			</Border>
             <Border x:Name="SearchBar" BorderThickness="1" HorizontalAlignment="Left" Height="40" Margin="265,59,0,0" VerticalAlignment="Top" Width="413" Background="#FF2A2E36" CornerRadius="15">

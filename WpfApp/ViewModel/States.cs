@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using WpfApp.Model;
-using WpfApp;
-using System.Windows.Threading;
 
 namespace WpfApp.ViewModel
 
@@ -21,17 +19,17 @@ namespace WpfApp.ViewModel
             {
 				return c;
             }
-			// Get TotalFileSize
-			var files = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories);
+            // Get TotalFileSize
+            string[] files = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories);
 			long totalFileSize = 0;
 			foreach(string file in files)
             {
 				FileInfo fileinfo = new FileInfo(file);
 				totalFileSize += fileinfo.Length;
             }
-			totalFileSize = totalFileSize/1048576;
-			string id = _AddId();
-			var newTask = new ItemStateClass()
+			totalFileSize /= 1048576;
+			string id = _addId();
+            ItemStateClass newTask = new ItemStateClass()
 			{
 				Name = name,
 				Id = id,
@@ -47,7 +45,7 @@ namespace WpfApp.ViewModel
 				Encrypt = encryption.ToString()
 			};
 			Setting param = new Setting();
-			var tableauObjets = JsonStateLog.Read(param.PathStates());
+            ItemStateClass[] tableauObjets = JsonStateLog.Read(param.PathStates());
 			tableauObjets = new List<ItemStateClass>(tableauObjets) { newTask }.ToArray();
 			
 			JsonStateLog.Write(param, tableauObjets);
@@ -62,7 +60,7 @@ namespace WpfApp.ViewModel
 				JsonStateLog.Write(param);
 				//return _Langue.Translation(27);
             }
-			var r = JsonStateLog.Read(param.PathStates());
+            ItemStateClass[] r = JsonStateLog.Read(param.PathStates());
 			if (r.Length == 0)
             {
 				//return _Langue.Translation(27);
@@ -77,7 +75,7 @@ namespace WpfApp.ViewModel
 		public static List<SaveList> GetSaveList(string name)
 		{
 			Setting param = new Setting();
-			var r = JsonStateLog.Read(param.PathStates());
+            ItemStateClass[] r = JsonStateLog.Read(param.PathStates());
 			List<SaveList> StateList = new List<SaveList>();
 			foreach (ItemStateClass element in r)
 			{
@@ -94,16 +92,16 @@ namespace WpfApp.ViewModel
 		{
 			Setting param = new Setting();
 			if (_isExist(saveId)){
-                var r = JsonStateLog.Read(param.PathStates());
+                ItemStateClass[] r = JsonStateLog.Read(param.PathStates());
 				List<ItemStateClass> list = new List<ItemStateClass>(r);
 				list.RemoveAll(element => element.Id == saveId.ToString());
-				var newTab = list.ToArray();
+                ItemStateClass[] newTab = list.ToArray();
 				foreach(ItemStateClass e in newTab)
                 {
-					var id = Int32.Parse(e.Id);
+                    int id = Int32.Parse(e.Id);
 					if(id > saveId)
                     {
-						var newId = id - 1;
+                        int newId = id - 1;
 						e.Id = newId.ToString();
                     }
                 }
@@ -117,7 +115,7 @@ namespace WpfApp.ViewModel
 		public static void UpdateStatus(string id, int progression, int nbFilesLeft, string state)
 		{
 			Setting param = new Setting();
-			var r = JsonStateLog.Read(param.PathStates());
+            ItemStateClass[] r = JsonStateLog.Read(param.PathStates());
 			foreach(ItemStateClass e in r)
             {
 				if(e.Id == id)
@@ -134,9 +132,9 @@ namespace WpfApp.ViewModel
 		// isExists renvoie vrai si la save existe
 		private static bool _isExist(int saveId)
 		{
-			var id = saveId.ToString();
+            string id = saveId.ToString();
 			Setting param = new Setting();
-			var r = JsonStateLog.Read(param.PathStates());
+            ItemStateClass[] r = JsonStateLog.Read(param.PathStates());
 			foreach(ItemStateClass element in r)
             {
 				if (element.Id == id)
@@ -163,17 +161,17 @@ namespace WpfApp.ViewModel
 		
 
 		// Add an id when create a task
-		private static string _AddId()
+		private static string _addId()
         {
 			Setting param = new Setting();
-			var r = JsonStateLog.Read(param.PathStates());
+            ItemStateClass[] r = JsonStateLog.Read(param.PathStates());
 
-			var newId = 1;
+            int newId = 1;
 			if (!(r.Length == 0))
             {
-				var lastId = r.Last().Id;
+                string lastId = r.Last().Id;
 
-				newId = Int32.Parse(lastId) + 1;
+				newId = int.Parse(lastId) + 1;
 			}
 
 			return newId.ToString();

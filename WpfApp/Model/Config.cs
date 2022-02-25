@@ -6,8 +6,7 @@ namespace WpfApp.Model
     //setting class
     public static class Config
     {
-        static string _Path="./Setting.json";
-
+        private static readonly string _Path="./Setting.json";
 
         public static void Write(ItemSettings param)
         { 

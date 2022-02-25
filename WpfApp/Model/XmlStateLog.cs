@@ -13,8 +13,6 @@ namespace WpfApp.Model
 
         public static ItemLogClass[] Read(string path)
         {
-
-           
             // Create a TextReader to read the file.
 
             FileStream fs = new FileStream(path + DateTime.Now.ToString("MMMM dd, yyyy") + ".Xml", FileMode.OpenOrCreate);
@@ -32,7 +30,7 @@ namespace WpfApp.Model
 
                     return items;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     reader.Close();
                     return null;
@@ -42,7 +40,7 @@ namespace WpfApp.Model
 
         public static void Write(ItemLogClass itemToAdd, Setting setting,params string[] task)
         {
-            string path = "";
+            string path;
              if (task.Length > 0)
             {
                  path = setting.PathStates()+task[0];

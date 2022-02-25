@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Text.Json;
-using System.Windows.Threading;
 
 namespace WpfApp.Model
 {

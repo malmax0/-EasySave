@@ -1,6 +1,7 @@
 ﻿namespace WpfApp.Model
 {
     public class ItemLogClass
+    //Information of the log file
     {
         public string Name { get; set; }
         public string FileSource { get; set; }

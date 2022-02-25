@@ -91,6 +91,7 @@
     <Compile Include="Model\ItemCryptClass.cs" />
     <Compile Include="Model\Setting.cs" />
     <Compile Include="Model\XmlStateLog.cs" />
+    <Compile Include="ViewModel\SocketServer.cs" />
     <Compile Include="View\Popup.xaml.cs">
       <DependentUpon>Popup.xaml</DependentUpon>
     </Compile>
@@ -150,40 +151,40 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\save_icon.png" />
+    <Resource Include="View\icons\save_icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\settings_logo.jpg" />
+    <Resource Include="View\icons\settings_logo.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\deleteIcon.png" />
+    <Resource Include="View\icons\deleteIcon.png" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CryptoSoft\" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\playicon.jpg" />
+    <Resource Include="View\icons\playicon.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\PlusIcon.png" />
+    <Resource Include="View\icons\PlusIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\SearchIcon.png" />
+    <Resource Include="View\icons\SearchIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\RefreshIcon.png" />
+    <Resource Include="View\icons\RefreshIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\SettingsIcon.png" />
+    <Resource Include="View\icons\SettingsIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\HomeIcon.png" />
+    <Resource Include="View\icons\HomeIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\PauseIcon.png" />
+    <Resource Include="View\icons\PauseIcon.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="View\StopIcon.png" />
+    <Resource Include="View\icons\StopIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

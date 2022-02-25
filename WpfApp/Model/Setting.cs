@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-namespace WpfApp.Model
+﻿namespace WpfApp.Model
 {
     public class Setting
     {
         private ItemSettings Parametre;
 
-
         public Setting()
         {
             Parametre = Config.Read();
         }
-        public void refresh()
+        public void Refresh()
         {
             Parametre = Config.Read();
         }
@@ -43,7 +37,7 @@ namespace WpfApp.Model
         {
             return Parametre.Buisnessoft;
         }
-        public string FilesPrio()
+        public string[] FilesPrio()
         {
             return Parametre.FilesPrio;
         }
@@ -51,11 +45,13 @@ namespace WpfApp.Model
         {
             return Parametre.LimitSize;
         }
+        public string LimitThread()
+        {
+            return Parametre.LimitThread;
+        }
         public ItemSettings GetSettings()
         {
             return Parametre;
         }
-
-
     }
 }

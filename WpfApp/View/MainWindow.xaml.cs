@@ -1,24 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Diagnostics;
 using WpfApp.ViewModel;
 using WpfApp.Model;
 using System.Windows.Forms;
-using Syncfusion.UI.Xaml.Grid;
 using System.Windows.Media.Animation;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.ComponentModel; 
+
 
 namespace WpfApp
 {
@@ -28,32 +22,52 @@ namespace WpfApp
     public partial class MainWindow : Window
     {
         public progresse progre;
-        Langue langue ;
-        Save save;
+        private Langue langue;
+        public Save save;
+        readonly SocketServer socketServeur;
+        Thread socket;
+
         public MainWindow()
         {
+            Langue lang = new Langue();
+            langue = lang;
+            save = new Save();
+            
+
+
             Process[] LocalByName = Process.GetProcessesByName("WpfApp");
             if (LocalByName.Length > 1)
-            {
-                Langue lang = new Langue();
+            {                
                 MessagePopup(lang.Translation(47));
                 Close();
             }
-                InitializeComponent();
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("@31392e342e30jse9pqgnHKapAl3VwjfJIyrcv9mVvIYME0lVG0Yas+Q=");
-            langue = new Langue();
+            InitializeComponent();
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("@31392e342e30jse9pqgnHKapAl3VwjfJIyrcv9mVvIYME0lVG0Yas+Q=");            
             InitializeView();
             LoadGridView();
-            progre = avancement;
-            
-            
-            //GRRID.ItemsSource = JsonStateLog.Read();
+            progre = Avancement;
+
+
+            //code for remote
+            socketServeur = new SocketServer();
+            socket = new Thread(() =>socketServeur.Launch(this));
+            socket.Start();
         }
 
-        private void LoadGridView()
+        //refresh datagrid 
+        public void LoadGridView()
         {
-            GRRID.ItemsSource = States.GetSaveList();
+            Dispatcher.Invoke(() =>
+            {
+                GRRID.ItemsSource = States.GetSaveList();
+            });
+            if(socketServeur!=null)
+            {
+                socketServeur.EnvoiStatus();
+            }
+           
         }
+
         private void InitializeView()
         {
             GRRID.AutoGeneratingColumn += DataGrid_AutoGeneratingColumn;
@@ -78,7 +92,8 @@ namespace WpfApp
             Modify.Content = langue.Translation(40);
             LabelFilesPrio.Content = langue.Translation(45);
             LabelLimitSize.Content = langue.Translation(46);
-            ItemSettings conf = ConfigViewModel.getparam();
+            LabelLimitThread.Content = langue.Translation(48);
+            ItemSettings conf = ConfigViewModel.Getparam();
             SetLanguage.SelectedItem = conf.Language == "FR" ? SetFR : SetEN;
             StatePath.Text = conf.PathStates;
             SetLogExtension.SelectedItem = conf.LogExtension == "XML" ? SetXML : SetJSON;
@@ -89,7 +104,9 @@ namespace WpfApp
                 CryptoExtension.Text = string.Join(",", conf.CyptoExtension);
             }
             LogicielMetier.Text = conf.Buisnessoft;
-            FilesPrio.Text = conf.LimitSize;
+            FilesPrio.Text = string.Join(",",conf.FilesPrio);
+            LimitSize.Text = conf.LimitSize;
+            LimitThread.Text = conf.LimitThread;
 
         }
         // Show info message in a popup
@@ -133,10 +150,11 @@ namespace WpfApp
                 LoadGridView();
             }
         }
+
         // Launch a backup
         private async void LaunchBackup_Click(object sender, RoutedEventArgs e)
         {
-            save = new Save();
+            socketServeur.Requete("play");
             object[] selected = GRRID.SelectedItems.ToArray();
             string retour = "";
             if (selected.Length == 0)
@@ -155,54 +173,55 @@ namespace WpfApp
                     }
                     launchId = launchId.Remove(launchId.Length - 1);
                     retour = save.MakeASave(launchId, progre);
-
                 });
+                
                 await task;
                 Animate("EndLaunch");
+                socketServeur.Requete("fini");
             }
             MessagePopup(retour);
         }
-        
-        private async void Resume_Click(object sender, RoutedEventArgs e)
+
+        public async void Resume_Click(object sender, RoutedEventArgs e)
         {
-            save.resume("all");
-            ResumeButton.Visibility = Visibility.Hidden;
-            PauseButton.Visibility = Visibility.Visible;
+            socketServeur.Requete("resume");
+            save.Resume("all");
+            Dispatcher.Invoke(() =>
+            {
+                ResumeButton.Visibility = Visibility.Hidden;
+                PauseButton.Visibility = Visibility.Visible;
+            });
+        }
+      
+        // Put save in pause
+        public  void Pause_Click(object sender, RoutedEventArgs e)
+        {
+            socketServeur.Requete("pause");
+            Dispatcher.Invoke(() =>
+            {
+                ResumeButton.Visibility = Visibility.Visible;
+                PauseButton.Visibility = Visibility.Hidden;
+                save.Pause("all");
+            });
         }
 
-        // Put save in pause
-        private void Pause_Click(object sender, RoutedEventArgs e)
-        {
-            ResumeButton.Visibility = Visibility.Visible;
-            PauseButton.Visibility = Visibility.Hidden;
-            /*object[] selected = GRRID.SelectedItems.ToArray();
-            string retour = "";
-            if (selected.Length == 0)
-            {
-                retour = langue.Translation(26);
-            }
-            else
-            {
-                string launchId = "";
-                foreach (SaveList t in selected)
-                {
-                    launchId += $"{t.Id};";
-                }
-                launchId = launchId.Remove(launchId.Length - 1);
-                save.pause(launchId);
-             }*/
-            save.pause("all");
-        }
         // Stop save
-        private void Stop_Click(object sender, RoutedEventArgs e)
+        public void Stop_Click(object sender, RoutedEventArgs e)
         {
-            save.kill("all");
-            ResumeButton.Visibility = Visibility.Hidden;
-            Animate("EndLaunch");
+            Dispatcher.Invoke(() =>
+            {
+                socketServeur.Requete("kill");
+                save.Kill("all");
+
+                ResumeButton.Visibility = Visibility.Hidden;
+                Animate("EndLaunch");
+            });
         }
+
         /*
          *  Find path folder in a popup
          */
+
         private string Finder(string p)
         {
             FolderBrowserDialog dialog = new FolderBrowserDialog();
@@ -270,6 +289,7 @@ namespace WpfApp
         /*
          * SearchBar
          */
+
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
             if (SearchText.Text == "")
@@ -290,21 +310,24 @@ namespace WpfApp
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
             GRRID.ItemsSource = States.GetSaveList();
+            socketServeur.EnvoiStatus();
         }
 
-        public async void avancement(int subject)
+        public async void Avancement(int subject)
         {
             Dispatcher.Invoke(() =>
             {
                 LoadGridView();
                 ProgressBar.Value = subject;
             });
+            socketServeur.Requete("av?" + subject.ToString());
+
         }
 
         // Modify Settings
         private void Modify_Click(object sender, RoutedEventArgs e)
         {
-            ConfigViewModel.PutInConfig(SetLanguage.SelectedItem.ToString(), StatePath.Text, LogPath.Text, SetLogExtension.SelectedItem.ToString(), CryptoPath.Text, CryptoExtension.Text, LogicielMetier.Text, FilesPrio.Text, LimitSize.Text);
+            ConfigViewModel.PutInConfig(SetLanguage.SelectedItem.ToString(), StatePath.Text, LogPath.Text, SetLogExtension.SelectedItem.ToString(), CryptoPath.Text, CryptoExtension.Text, LogicielMetier.Text, FilesPrio.Text, LimitSize.Text, LimitThread.Text);
             langue = new Langue();
             InitializeView();
             LoadGridView();
@@ -312,7 +335,7 @@ namespace WpfApp
         }
 
         // Animation for play | pause | resume | stop menu
-        private void Animate(string anim)
+        public void Animate(string anim)
         {
             Dispatcher.Invoke(() =>
             {
@@ -324,6 +347,7 @@ namespace WpfApp
                         PauseButton.Visibility = Visibility.Visible;
                         Border___AddNew.Visibility = Visibility.Hidden;
                         ProgressBar.Visibility = Visibility.Visible;
+                        SettingsButton.IsEnabled = false;
 
                         a.From = 133;
                         a.To = 193;
@@ -333,34 +357,54 @@ namespace WpfApp
                             StopButton.Visibility = Visibility.Visible;
                         };
                         Border_Options.BeginAnimation(Border.WidthProperty, a);
+                        
                         break;
 
                     case "EndLaunch":
                         a.From = 193;
                         a.To = 133;
                         a.Duration = new Duration(TimeSpan.FromSeconds(1));
-                        StopButton.Visibility = Visibility.Hidden;
+                        if (StopButton.Visibility == Visibility.Hidden)
+                        {
+                            a.Completed += (s, e) =>
+                            {
+                                StopButton.Visibility = Visibility.Hidden;
+                            };
+                        }
+                        else
+                        {
+                            StopButton.Visibility = Visibility.Hidden;
+                        }
                         Border_Options.BeginAnimation(Border.WidthProperty, a);
 
                         ProgressBar.Visibility = Visibility.Hidden;
                         LaunchButton.Visibility = Visibility.Visible;
                         PauseButton.Visibility = Visibility.Hidden;
-
+                        SettingsButton.IsEnabled = true;
                         break;
                     default:
                         break;
                 }
             });
-
         }
 
         // Allow only numeric value for LimitSize textbox 
         private void LimitSize_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            var textbox = sender as System.Windows.Controls.TextBox;
             e.Handled = Regex.IsMatch(e.Text, "[^0-9]+");
-
         }
-
+        private void LimitThread_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = Regex.IsMatch(e.Text, "[^0-9]+");
+        }
+        private void close(object sender, CancelEventArgs e)
+        {
+            
+            e.Cancel = false;
+            Proces.close();
+           
+            
+            
+        }
     }
 }
