@@ -1,0 +1,17 @@
+{
+  "Language": "EN",
+  "PathCrypt": "D:\\user\\projet\\programation_system\\depot\\easysave\\EasySave\\WpfApp\\CryptoSoft\\cryptosoft.exe",
+  "PathLog": "./log",
+  "LogExtension": "JSON",
+  "PathStates": "./states.json",
+  "CyptoExtension": [
+    ".py",
+    ".js"
+  ],
+  "Buisnessoft": "notepad",
+  "FilesPrio": [
+    ".exe"
+  ],
+  "LimitSize": "10",
+  "LimitThread": "100"
+}
